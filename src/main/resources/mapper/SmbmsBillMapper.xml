@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccu.smbms.mapper.SmbmsBillMapper">
+
+    <resultMap id="SmbmsBillResult" type="com.ccu.smbms.domain.SmbmsBill">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="billCode" column="billCode" jdbcType="VARCHAR"/>
+        <result property="productName" column="productName" jdbcType="VARCHAR"/>
+        <result property="productDesc" column="productDesc" jdbcType="VARCHAR"/>
+        <result property="productUnit" column="productUnit" jdbcType="VARCHAR"/>
+        <result property="productCount" column="productCount" jdbcType="DECIMAL"/>
+        <result property="totalPrice" column="totalPrice" jdbcType="DECIMAL"/>
+        <result property="isPayment" column="isPayment" jdbcType="INTEGER"/>
+        <result property="createdBy" column="createdBy" jdbcType="BIGINT"/>
+        <result property="creationDate" column="creationDate" jdbcType="TIMESTAMP"/>
+        <result property="modifyBy" column="modifyBy" jdbcType="BIGINT"/>
+        <result property="modifyDate" column="modifyDate" jdbcType="TIMESTAMP"/>
+        <result property="providerId" column="providerId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="selectSmbmsBillVo">
+        select b.id,
+               b.billCode,
+               b.productName,
+               b.productDesc,
+               b.productUnit,
+               b.productCount,
+               b.totalPrice,
+               b.isPayment,
+               b.createdBy,
+               b.creationDate,
+               b.modifyBy,
+               b.modifyDate,
+               b.providerId
+        from smbms_provider p
+                 LEFT JOIN
+             smbms_bill b
+             ON
+                 p.id = b.providerId
+    </sql>
+
+    <select id="selectSmbmsBillList" parameterType="SmbmsBill" resultMap="SmbmsBillResult">
+        <include refid="selectSmbmsBillVo"/>
+        <where>
+            <if test="billCode != null  and billCode != ''">and b.billCode = #{billCode}</if>
+            <if test="productName != null  and productName != ''">and b.productName like concat('%', #{productName}, '%')</if>
+            <if test="productDesc != null  and productDesc != ''">and b.productDesc = #{productDesc}</if>
+            <if test="productUnit != null  and productUnit != ''">and b.productUnit = #{productUnit}</if>
+            <if test="productCount != null ">and b.productCount = #{productCount}</if>
+            <if test="totalPrice != null ">and b.totalPrice = #{totalPrice}</if>
+            <if test="isPayment != null ">and b.isPayment = #{isPayment}</if>
+            <if test="createdBy != null ">and b.createdBy = #{createdBy}</if>
+            <if test="creationDate != null ">and b.creationDate = #{creationDate}</if>
+            <if test="modifyBy != null ">and b.modifyBy = #{modifyBy}</if>
+            <if test="modifyDate != null ">and b.modifyDate = #{modifyDate}</if>
+            <if test="providerId != null ">and b.providerId = #{providerId}</if>
+        </where>
+    </select>
+
+    <sql id="selectSmbmsBillByIdVo">
+        select id,
+               billCode,
+               productName,
+               productDesc,
+               productUnit,
+               productCount,
+               totalPrice,
+               isPayment,
+               createdBy,
+               creationDate,
+               modifyBy,
+               modifyDate,
+               providerId
+        from smbms_bill
+    </sql>
+
+    <select id="selectSmbmsBillById" parameterType="Long" resultMap="SmbmsBillResult">
+        <include refid="selectSmbmsBillByIdVo"/>
+        where id = #{id}
+    </select>
+    <!--获取最新的id-->
+    <select id="getLatestId" resultType="java.lang.Long">
+        select id from smbms_bill order by id desc limit 1
+    </select>
+
+    <insert id="insertSmbmsBill" parameterType="SmbmsBill" useGeneratedKeys="true" keyProperty="id">
+        insert into smbms_bill
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="billCode != null and billCode != ''">billCode,</if>
+            <if test="productName != null and productName != ''">productName,</if>
+            <if test="productDesc != null">productDesc,</if>
+            <if test="productUnit != null and productUnit != ''">productUnit,</if>
+            <if test="productCount != null">productCount,</if>
+            <if test="totalPrice != null">totalPrice,</if>
+            <if test="isPayment != null">isPayment,</if>
+            <if test="createdBy != null">createdBy,</if>
+            <if test="creationDate != null">creationDate,</if>
+            <if test="modifyBy != null">modifyBy,</if>
+            <if test="modifyDate != null">modifyDate,</if>
+            <if test="providerId != null">providerId,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="billCode != null and billCode != ''">#{billCode},</if>
+            <if test="productName != null and productName != ''">#{productName},</if>
+            <if test="productDesc != null">#{productDesc},</if>
+            <if test="productUnit != null and productUnit != ''">#{productUnit},</if>
+            <if test="productCount != null">#{productCount},</if>
+            <if test="totalPrice != null">#{totalPrice},</if>
+            <if test="isPayment != null">#{isPayment},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="creationDate != null">#{creationDate},</if>
+            <if test="modifyBy != null">#{modifyBy},</if>
+            <if test="modifyDate != null">#{modifyDate},</if>
+            <if test="providerId != null">#{providerId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSmbmsBill" parameterType="SmbmsBill">
+        update smbms_bill
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="billCode != null and billCode != ''">billCode = #{billCode},</if>
+            <if test="productName != null and productName != ''">productName = #{productName},</if>
+            <if test="productDesc != null">productDesc = #{productDesc},</if>
+            <if test="productUnit != null and productUnit != ''">productUnit = #{productUnit},</if>
+            <if test="productCount != null">productCount = #{productCount},</if>
+            <if test="totalPrice != null">totalPrice = #{totalPrice},</if>
+            <if test="isPayment != null">isPayment = #{isPayment},</if>
+            <if test="createdBy != null">createdBy = #{createdBy},</if>
+            <if test="creationDate != null">creationDate = #{creationDate},</if>
+            <if test="modifyBy != null">modifyBy = #{modifyBy},</if>
+            <if test="modifyDate != null">modifyDate = #{modifyDate},</if>
+            <if test="providerId != null">providerId = #{providerId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSmbmsBillById" parameterType="Long">
+        delete
+        from smbms_bill
+        where id = #{id}
+    </delete>
+
+
+</mapper>

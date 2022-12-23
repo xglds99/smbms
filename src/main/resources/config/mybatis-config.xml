@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!-- 驼峰命名映射-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+<!--        <setting name="mapUnderscoreToCamelCase" value="false"/>-->
+        <!-- 日志-->
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+
+    <!-- 起别名-->
+    <typeAliases>
+        <package name="com.ccu.smbms.domain"/>
+    </typeAliases>
+
+    <!-- 分页插件-->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <property name="dialect" value="mysql"/>
+        </plugin>
+    </plugins>
+
+<!--    <mappers>-->
+<!--        <mapper resource="mapper/*.xml"/>-->
+<!--    </mappers>-->
+
+</configuration>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccu.smbms.mapper.SmbmsUserMapper">
+
+    <resultMap id="SmbmsUserResult" type="com.ccu.smbms.domain.SmbmsUser">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userCode" column="userCode" jdbcType="VARCHAR"/>
+        <result property="userName" column="userName" jdbcType="VARCHAR"/>
+        <result property="userPassword" column="userPassword" jdbcType="VARCHAR"/>
+        <result property="gender" column="gender" jdbcType="INTEGER"/>
+        <result property="birthday" column="birthday" jdbcType="DATE"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
+        <result property="userRole" column="userRole" jdbcType="INTEGER"/>
+        <result property="createdBy" column="createdBy" jdbcType="BIGINT"/>
+        <result property="creationDate" column="creationDate" jdbcType="TIMESTAMP"/>
+        <result property="modifyBy" column="modifyBy" jdbcType="BIGINT"/>
+        <result property="modifyDate" column="modifyDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="selectSmbmsUserVo">
+        select u.id,
+               u.userName,
+               u.userCode,
+               u.userPassword,
+               u.gender,
+               u.phone,
+               u.address,
+               u.birthday,
+               u.userRole,
+               u.createdBy,
+               u.creationDate,
+               u.modifyBy,
+               u.modifyDate,
+               r.roleName
+
+        from smbms_user u,
+             smbms_role r
+
+
+    </sql>
+
+    <select id="selectSmbmsUserList" parameterType="com.ccu.smbms.domain.SmbmsUser" resultMap="SmbmsUserResult">
+        <include refid="selectSmbmsUserVo"></include>
+        <where>
+            r.id = u.userRole
+            <if test="userCode != null and userCode != ''">and u.userCode = #{userCode}</if>
+            <if test="userName != null and userName != ''">and u.userName like concat('%', #{userName}, '%')</if>
+            <if test="userPassword != null and userPassword != ''">and u.userPassword = #{userPassword}</if>
+            <if test="gender != null ">and u.gender = #{gender}</if>
+            <if test="birthday != null ">and u.birthday = #{birthday}</if>
+            <if test="phone != null  and phone != ''">and u.phone = #{phone}</if>
+            <if test="address != null  and address != ''">and u.u.address = #{address}</if>
+            <if test="userRole != null ">and u.userRole = #{userRole}</if>
+            <if test="createdBy != null ">and u.createdBy = #{createdBy}</if>
+            <if test="creationDate != null ">and u.creationDate = #{creationDate}</if>
+            <if test="modifyBy != null ">and u.modifyBy = #{modifyBy}</if>
+            <if test="modifyDate != null ">and u.modifyDate = #{modifyDate}</if>
+        </where>
+    </select>
+
+    <select id="selectSmbmsUserById" parameterType="Long" resultMap="SmbmsUserResult">
+        <include refid="selectSmbmsUserVo"></include>
+        where u.id = #{id} and r.id = u.userRole
+    </select>
+
+
+    <insert id="insertSmbmsUser" parameterType="com.ccu.smbms.domain.SmbmsUser" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into smbms_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userCode != null and userCode != ''">userCode,</if>
+            <if test="userName!= null and userName != ''">userName,</if>
+            <if test="userPassword != null">userPassword,</if>
+            <if test="userRole != null">userRole,</if>
+            <if test="gender != null">gender,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="phone != null">phone,</if>
+            <if test="address != null">address,</if>
+            <if test="createdBy != null">createdBy,</if>
+            creationDate
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userCode != null and userCode != ''">#{userCode},</if>
+            <if test="userName!= null and userName != ''">#{userName},</if>
+            <if test="userPassword != null">#{userPassword},</if>
+            <if test="userRole != null">#{userRole},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="address != null">#{address},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+    <update id="updateSmbmsUser" parameterType="com.ccu.smbms.domain.SmbmsUser">
+        update smbms_user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="userCode != null and userCode != ''">userCode = #{userCode},</if>
+            <if test="userName != null and userName != ''">userName = #{userName},</if>
+            <if test="userPassword != null and userPassword != ''">userPassword = #{userPassword},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="userRole != null">userRole = #{userRole},</if>
+            <if test="modifyBy != null">modifyBy = #{modifyBy},</if>
+            modifyDate = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+    <delete id="deleteSmbmsUserById" parameterType="Long">
+        delete
+        from smbms_user
+        where id = #{id}
+    </delete>
+</mapper>

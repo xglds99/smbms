@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccu.smbms.mapper.SmbmsAddressMapper">
+
+    <resultMap id="SmbmsAddressResult" type="com.ccu.smbms.domain.SmbmsAddress">
+        <id property="id" column="id"/>
+        <result property="contact" column="contact"/>
+        <result property="addressDesc" column="addressDesc"/>
+        <result property="postCode" column="postCode"/>
+        <result property="tel" column="tel"/>
+        <result property="createdBy" column="createdBy"/>
+        <result property="creationDate" column="creationDate"/>
+        <result property="modifyBy" column="modifyBy"/>
+        <result property="modifyDate" column="modifyDate"/>
+        <result property="userId" column="userId"/>
+    </resultMap>
+
+    <sql id="selectSmbmsAddressVo">
+        select
+        a.id,
+        a.contact,
+        a.addressDesc,
+        a.postCode,
+        a.tel,
+        a.createdBy,
+        a.creationDate,
+        a.modifyBy,
+        a.modifyDate,
+        a.userId
+        from smbms_address a, smbms_address u
+    </sql>
+
+    <sql id="selectSmbmsAddressByIdVo">
+        select
+            id,
+            contact,
+            addressDesc,
+            postCode,
+            tel,
+            createdBy,
+            creationDate,
+            modifyBy,
+            modifyDate,
+            userId
+        from smbms_address
+    </sql>
+
+
+    <insert id="insertSmbmsAddress" parameterType="SmbmsAddress" useGeneratedKeys="true" keyProperty="id">
+        insert into smbms_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contact != null and contact != ''">contact,</if>
+            <if test="addressDesc != null and addressDesc != ''">addressDesc,</if>
+            <if test="postCode != null">postCode,</if>
+            <if test="tel != null and tel != ''">tel,</if>
+            <if test="createdBy != null">createdBy,</if>
+            <if test="creationDate != null">creationDate,</if>
+            <if test="modifyBy != null">modifyBy,</if>
+            <if test="modifyDate != null">modifyDate,</if>
+            <if test="userId != null">userId,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contact != null and contact != ''">#{contact},</if>
+            <if test="addressDesc != null and addressDesc != ''">#{addressDesc},</if>
+            <if test="postCode != null">#{postCode},</if>
+            <if test="tel != null and tel != ''">#{tel},</if>
+            <if test="createdBy != null">#{createdBy},</if>
+            <if test="creationDate != null">#{creationDate},</if>
+            <if test="modifyBy != null">#{modifyBy},</if>
+            <if test="modifyDate != null">#{modifyDate},</if>
+            <if test="userId != null">#{userId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSmbmsAddress" parameterType="SmbmsAddress">
+        update smbms_address
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contact != null and contact != ''">contact = #{contact},</if>
+            <if test="addressDesc != null and addressDesc != ''">addressDesc = #{addressDesc},</if>
+            <if test="postCode != null">postCode = #{postCode},</if>
+            <if test="tel != null and tel != ''">tel = #{tel},</if>
+            <if test="createdBy != null">createdBy = #{createdBy},</if>
+            <if test="creationDate != null">creationDate = #{creationDate},</if>
+            <if test="modifyBy != null">modifyBy = #{modifyBy},</if>
+            <if test="modifyDate != null">modifyDate = #{modifyDate},</if>
+            <if test="userId != null">userId = #{userId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAddressById" parameterType="Long">
+        delete
+        from smbms_address
+        where id = #{id}
+    </delete>
+    <select id="selectSmbmsAddressList" parameterType="SmbmsAddress" resultMap="SmbmsAddressResult">
+        <include refid="selectSmbmsAddressVo"/>
+        <where>
+            u.id = a.userId
+            <if test="contact != null  and contact != ''">and a.contact like concat('%', #{contact}, '%')</if>
+            <if test="addressDesc != null  and addressDesc != ''">and a.addressDesc = #{addressDesc}</if>
+            <if test="postCode != null  and postCode != ''">and a.postCode = #{postCode}</if>
+            <if test="tel != null  and tel != ''">and a.tel = #{tel}</if>
+            <if test="createdBy != null ">and a.createdBy = #{createdBy}</if>
+            <if test="creationDate != null ">and a.creationDate = #{creationDate}</if>
+            <if test="modifyBy != null ">and a.modifyBy = #{modifyBy}</if>
+            <if test="modifyDate != null ">and a.modifyDate = #{modifyDate}</if>
+            <if test="userId != null ">and a.userId = #{userId}</if>
+        </where>
+    </select>
+
+    <select id="selectAddressById" parameterType="Long" resultMap="SmbmsAddressResult">
+        <include refid="selectSmbmsAddressByIdVo"/>
+        where id = #{id}
+    </select>
+
+</mapper>
